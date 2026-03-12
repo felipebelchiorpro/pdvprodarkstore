@@ -1,0 +1,3 @@
+# Dark Store PDV Build Configuration
+[nodejs]
+version = "22"
