@@ -214,16 +214,18 @@ export default function ProdutosPage() {
                 return parseFloat(val.replace(/\./g, '').replace(',', '.'));
             };
 
-            const data = {
+            const data: Record<string, any> = {
                 name: formData.name,
-                category: formData.category,
-                barcode: formData.barcode,
-                sku: formData.sku,
-                description: formData.description,
                 unit_type: formData.unit_type,
                 cost_price: parsePrice(formData.cost_price),
                 sell_price: parsePrice(formData.sell_price)
             };
+
+            // Only include optional fields if they have a value (avoid "Cannot be blank" errors)
+            if (formData.category) data.category = formData.category;
+            if (formData.barcode) data.barcode = formData.barcode;
+            if (formData.sku) data.sku = formData.sku;
+            if (formData.description) data.description = formData.description;
 
             if (editingProduct) {
                 await pb.collection('products').update(editingProduct.id, data);
