@@ -19,9 +19,6 @@ build/
 .DS_Store
 *.pem
 *.img
-*.png
-*.jpg
-*.jpeg
 
 # debug
 npm-debug.log*
