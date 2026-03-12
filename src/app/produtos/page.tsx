@@ -455,14 +455,16 @@ export default function ProdutosPage() {
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
                                             <label className="block text-[11px] font-bold text-[#646464] uppercase tracking-wider mb-2">Categoria</label>
-                                            <input
-                                                type="text"
+                                            <select
                                                 value={formData.category}
                                                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                                placeholder="Ex: Proteínas"
-                                                className="w-full bg-[#111] border border-[#222] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#E85002] transition-all"
-                                                list="category-suggestions"
-                                            />
+                                                className="w-full bg-[#111] border border-[#222] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#E85002] transition-all appearance-none cursor-pointer"
+                                            >
+                                                <option value="">Sem Categoria</option>
+                                                {categories.map(cat => (
+                                                    <option key={cat.id} value={cat.name}>{cat.name}</option>
+                                                ))}
+                                            </select>
                                         </div>
                                         <div>
                                             <label className="block text-[11px] font-bold text-[#646464] uppercase tracking-wider mb-2">Unidade</label>
