@@ -67,7 +67,7 @@ export default function LoginPage() {
                         {/* MonsterFit Logo */}
                         <div className="w-14 h-14 rounded-2xl bg-[#111] border border-[#222] flex items-center justify-center shadow-inner overflow-hidden">
                             <img 
-                                src="/monsterfit-logo.png.PNG" 
+                                src="/monsterfit-logo.png" 
                                 alt="Monster Fit" 
                                 className="w-full h-full object-contain p-1.5"
                             />
