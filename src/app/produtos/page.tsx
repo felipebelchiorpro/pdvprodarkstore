@@ -154,6 +154,7 @@ export default function ProdutosPage() {
                 product_id: selectedProductForHistory.id,
                 type: movementData.type,
                 quantity: parseInt(movementData.quantity),
+                location: 'Dark Store',
                 description: movementData.description || (movementData.type === 'Entrada' ? 'Compra/Entrada' : 'Ajuste/Saída')
             });
 
@@ -239,6 +240,7 @@ export default function ProdutosPage() {
                         product_id: createdProduct.id,
                         type: 'Entrada',
                         quantity: stockQty,
+                        location: 'Dark Store',
                         description: 'Estoque inicial'
                     });
                 }
