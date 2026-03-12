@@ -72,18 +72,28 @@ export default function Dashboard() {
                 // 1. Fetch Today's Sales
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
-                const todayFilter = `created >= "${today.toISOString().replace('T', ' ')}"`;
+                // Use a more standard PocketBase date format
+                const todayStr = today.toISOString().split('T')[0] + ' 00:00:00';
+                const todayFilter = `created >= "${todayStr}"`;
                 
                 const salesToday = await pb.collection('sales').getFullList({
                     filter: todayFilter,
                     sort: '-created'
                 });
                 
-                const totalSalesVal = salesToday.reduce((sum, s) => sum + (s.total || 0), 0);
+                const totalSalesVal = salesToday.reduce((sum, s) => sum + (s.total_amount || 0), 0);
 
-                // 2. Fetch Total Inventory
-                const products = await pb.collection('products').getFullList();
-                const totalItems = products.reduce((sum, p) => sum + (p.stock || 0), 0);
+                // 2. Fetch Total Inventory (Proper calculation)
+                const [products, inventory] = await Promise.all([
+                    pb.collection('products').getFullList(),
+                    pb.collection('inventory').getFullList()
+                ]);
+
+                const totalItems = inventory.reduce((acc, inv: any) => {
+                    const qty = inv.quantity || 0;
+                    const isExit = inv.type === 'Saída';
+                    return acc + (isExit ? -qty : qty);
+                }, 0);
 
                 // 3. Profit Share (Example: 50% of total sales)
                 const profitShare = totalSalesVal * 0.5;
@@ -106,7 +116,7 @@ export default function Dashboard() {
                     const date = new Date(s.created);
                     const label = date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
                     if (chartMap.has(label)) {
-                        chartMap.set(label, chartMap.get(label) + (s.total || 0));
+                        chartMap.set(label, chartMap.get(label) + (s.total_amount || 0));
                     }
                 });
 
@@ -271,7 +281,7 @@ export default function Dashboard() {
                                 </div>
                                 <div className="text-right">
                                     <p className="text-sm font-black text-white tabular-nums">
-                                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(sale.total)}
+                                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(sale.total_amount)}
                                     </p>
                                 </div>
                             </div>
